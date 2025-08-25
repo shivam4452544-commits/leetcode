@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char* processEmail(char* email) {
+    char temp[101];
+    int temp_index = 0;
+    int i = 0;
+    
+    while (email[i] != '\0' && email[i] != '@') {
+        if (email[i] == '+') {
+            break;
+        }
+        if (email[i] != '.') {
+            temp[temp_index++] = email[i];
+        }
+        i++;
+    }
+    temp[temp_index] = '\0';
+
+    while (email[i] != '\0' && email[i] != '@') {
+        i++;
+    }
+    char* domain_name = &email[i];
+
+    char* normalized_email = (char*)malloc(temp_index + strlen(domain_name) + 1);
+    if (normalized_email == NULL) {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    strcpy(normalized_email, temp);
+    strcat(normalized_email, domain_name);
+
+    return normalized_email;
+}
+
+int numUniqueEmails(char** emails, int emailsSize) {
+    char** unique_emails = (char*)malloc(emailsSize * sizeof(char*));
+    if (unique_emails == NULL) {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    int unique_count = 0;
+
+    for (int i = 0; i < emailsSize; i++) {
+        char* normalized_email = processEmail(emails[i]);
+        
+        int is_unique = 1;
+        for (int j = 0; j < unique_count; j++) {
+            if (strcmp(unique_emails[j], normalized_email) == 0) {
+                is_unique = 0;
+                break;
+            }
+        }
+
+        if (is_unique) {
+            unique_emails[unique_count] = normalized_email;
+            unique_count++;
+        } else {
+            free(normalized_email);
+        }
+    }
+
+    for (int i = 0; i < unique_count; i++) {
+        free(unique_emails[i]);
+    }
+    free(unique_emails);
+
+    return unique_count;
+}
