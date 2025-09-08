@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int numPairsDivisibleBy60(std::vector<int>& time) {
+        std::vector<int> rem_counts(60, 0);
+        for (int t : time) {
+            rem_counts[t % 60]++;
+        }
+
+        int pair_count = 0;
+
+        // Case 1: Remainder 0
+        long long count0 = rem_counts[0];
+        pair_count += (count0 * (count0 - 1)) / 2;
+
+        // Case 2: Remainder 30
+        long long count30 = rem_counts[30];
+        pair_count += (count30 * (count30 - 1)) / 2;
+
+        // Case 3: Remainders 1 to 29
+        for (int i = 1; i < 30; ++i) {
+            pair_count += rem_counts[i] * rem_counts[60 - i];
+        }
+
+        return pair_count;
+    }
+};
