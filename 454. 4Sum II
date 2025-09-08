@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int fourSumCount(std::vector<int>& nums1, std::vector<int>& nums2, std::vector<int>& nums3, std::vector<int>& nums4) {
+        std::unordered_map<int, int> sum_map;
+        for (int a : nums1) {
+            for (int b : nums2) {
+                sum_map[a + b]++;
+            }
+        }
+        
+        int count = 0;
+        for (int c : nums3) {
+            for (int d : nums4) {
+                if (sum_map.count(-(c + d))) {
+                    count += sum_map[-(c + d)];
+                }
+            }
+        }
+        
+        return count;
+    }
+};
