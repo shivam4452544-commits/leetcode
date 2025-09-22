@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+
+class Solution {
+public:
+    int numUniqueEmails(std::vector<std::string>& emails) {
+        // Use an unordered_set to store unique normalized email addresses
+        std::unordered_set<std::string> unique_emails;
+
+        for (const std::string& email : emails) {
+            std::string normalized_local_name;
+            bool plus_found = false;
+            
+            size_t at_pos = email.find('@');
+            std::string local_name = email.substr(0, at_pos);
+            std::string domain_name = email.substr(at_pos);
+
+            for (char c : local_name) {
+                if (c == '+') {
+                    plus_found = true;
+                }
+                if (!plus_found && c != '.') {
+                    normalized_local_name += c;
+                }
+            }
+
+            std::string canonical_email = normalized_local_name + domain_name;
+            unique_emails.insert(canonical_email);
+        }
+
+        return unique_emails.size();
+    }
+};
