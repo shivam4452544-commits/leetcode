@@ -1,0 +1,12 @@
+class Solution {
+public:
+    int minStartValue(vector<int>& nums) {
+    int runningSum = 0;
+    int minSum = INT_MAX;
+        for (int num : nums) {
+        runningSum += num;
+        minSum = min(minSum, runningSum);
+        }
+        return max(1,1 - minSum);
+    }
+};
